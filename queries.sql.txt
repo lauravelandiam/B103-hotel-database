@@ -1,0 +1,47 @@
+--BOOKINGS WITH CUSTOMER AND ROOM DETAILS.
+SELECT 
+  b.booking_id,
+  CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+  h.name AS hotel,
+  r.room_number,
+  r.type,
+  b.check_in,
+  b.check_out,
+  b.status
+FROM bookings b
+JOIN customers c ON b.customer_id = c.customer_id
+JOIN rooms r ON b.room_id = r.room_id
+JOIN hotels h ON r.hotel_id = h.hotel_id;
+
+--ROOMS AVAILABILITY
+SELECT r.room_id, h.name AS hotel, r.room_number, r.type, r.price_per_night
+FROM rooms r
+JOIN hotels h ON r.hotel_id = h.hotel_id
+WHERE r.room_id NOT IN (
+  SELECT room_id FROM bookings
+  WHERE status = 'confirmed'
+  AND check_in < '2026-04-20'
+  AND check_out > '2026-04-15'
+);
+
+--TOTAL REV PER HOTEL
+SELECT 
+  h.name AS hotel,
+  SUM(p.amount) AS total_revenue
+FROM payments p
+JOIN bookings b ON p.booking_id = b.booking_id
+JOIN rooms r ON b.room_id = r.room_id
+JOIN hotels h ON r.hotel_id = h.hotel_id
+GROUP BY h.name
+ORDER BY total_revenue DESC;
+
+--BOOKING STATUS
+UPDATE bookings SET status = 'cancelled' WHERE booking_id = 1;
+
+--AVG $ PER ROOM 
+SELECT type, ROUND(AVG(price_per_night), 2) AS avg_price
+FROM rooms
+GROUP BY type;
+
+--DELETE PAYMENTS
+DELETE FROM payments WHERE payment_id = 7;
