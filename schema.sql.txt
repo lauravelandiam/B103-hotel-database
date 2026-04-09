@@ -6,6 +6,7 @@ CREATE TABLE hotels (
   stars INT NOT NULL CHECK (stars BETWEEN 1 AND 5),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 CREATE TABLE rooms (
   room_id INT AUTO_INCREMENT PRIMARY KEY,
   hotel_id INT NOT NULL,
@@ -14,8 +15,9 @@ CREATE TABLE rooms (
   price_per_night DECIMAL(10,2) NOT NULL,
   capacity INT NOT NULL,
   FOREIGN KEY (hotel_id) REFERENCES hotels(hotel_id)
- );
- CREATE TABLE customers (
+);
+
+CREATE TABLE customers (
   customer_id INT AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
@@ -39,7 +41,7 @@ CREATE TABLE bookings (
 
 CREATE TABLE payments (
   payment_id INT AUTO_INCREMENT PRIMARY KEY,
-   booking_id INT NOT NULL,
+  booking_id INT NOT NULL,
   amount DECIMAL(10,2) NOT NULL,
   method VARCHAR(50) NOT NULL,
   paid_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -50,49 +52,5 @@ CREATE INDEX idx_bookings_customer ON bookings(customer_id);
 CREATE INDEX idx_bookings_room ON bookings(room_id);
 CREATE INDEX idx_rooms_hotel ON rooms(hotel_id);
 
-INSERT INTO hotels (name, city, country, stars) VALUES
-('The Grand Berlin', 'Berlin', 'Germany', 5),
-('Hotel Mitte', 'Berlin', 'Germany', 3),
-('Paris Luxe', 'Paris', 'France', 4),
-('Roma Central', 'Rome', 'Italy', 3),
-('Vienna Palace', 'Vienna', 'Austria', 5);
 
-INSERT INTO rooms (hotel_id, room_number, type, price_per_night, capacity) VALUES
-(1, '101', 'Single', 120.00, 1),
-(1, '102', 'Double', 200.00, 2),
-(1, '201', 'Suite', 450.00, 3),
-(2, '101', 'Single', 75.00, 1),
-(2, '102', 'Double', 110.00, 2),
-(3, '301', 'Double', 180.00, 2),
-(3, '302', 'Suite', 380.00, 4),
-(4, '101', 'Single', 65.00, 1),
-(5, '501', 'Suite', 500.00, 3);
-
-INSERT INTO customers (first_name, last_name, email, phone, country) VALUES
-('Anna', 'Müller', 'anna.mueller@email.com', '+49123456789', 'Germany'),
-('James', 'Smith', 'james.smith@email.com', '+44987654321', 'UK'),
-('Sofia', 'García', 'sofia.garcia@email.com', '+34612345678', 'Spain'),
-('Lucas', 'Dupont', 'lucas.dupont@email.com', '+33645678901', 'France'),
-('Mia', 'Rossi', 'mia.rossi@email.com', '+39345678901', 'Italy'),
-('Tom', 'Weber', 'tom.weber@email.com', '+49234567890', 'Germany'),
-('Clara', 'Bauer', 'clara.bauer@email.com', '+49345678901', 'Germany');
-
-INSERT INTO bookings (customer_id, room_id, check_in, check_out, status) VALUES
-(1, 2, '2026-04-10', '2026-04-14', 'confirmed'),
-(2, 6, '2026-04-15', '2026-04-18', 'confirmed'),
-(3, 3, '2026-04-20', '2026-04-25', 'confirmed'),
-(4, 7, '2026-04-12', '2026-04-13', 'cancelled'),
-(5, 8, '2026-05-01', '2026-05-05', 'confirmed'),
-(6, 1, '2026-05-10', '2026-05-12', 'confirmed'),
-(7, 9, '2026-05-15', '2026-05-20', 'confirmed'),
-(1, 10, '2026-06-01', '2026-06-03', 'confirmed');
-
-INSERT INTO payments (booking_id, amount, method) VALUES
-(1, 800.00, 'credit_card'),
-(2, 540.00, 'paypal'),
-(3, 2250.00, 'credit_card'),
-(5, 260.00, 'debit_card'),
-(6, 240.00, 'credit_card'),
-(7, 2500.00, 'bank_transfer'),
-(8, 440.00, 'paypal');
 
